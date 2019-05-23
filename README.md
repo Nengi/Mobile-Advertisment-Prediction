@@ -3,7 +3,7 @@
 This project aims to predict probability of a user installing an app after seeing a mobile adverstisment. This project was for the Predictive Analytics course at the University of Texas at Dallas
 
 ## Project Details
-The dataset was an imbalanced dataset with 0.81% of observed cases. Logistic regression was implemented was in SAS with a prediction accuracy of 69%. An update was made Random Oversampling package in R with an improved accuracy of 71%. Analysis of the dataset in SAS can be viewed here
+The dataset was an imbalanced dataset with 0.81% of observed cases. Logistic regression was implemented was in SAS with a prediction accuracy of 69%. An update was made Random Oversampling package in R with an improved accuracy of 71%. Analysis of the dataset in SAS can be viewed in the pdf document attached
 
 ## Technology Used
 - SAS 
