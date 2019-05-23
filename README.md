@@ -5,6 +5,10 @@ This project aims to predict probability of a user installing an app after seein
 ## Project Details
 The dataset was an imbalanced dataset with 0.81% of observed cases. Logistic regression was implemented was in SAS with a prediction accuracy of 69%. An update was made Random Oversampling package in R with an improved accuracy of 71%. Analysis of the dataset in SAS can be viewed here
 
+## Technology Used
+- SAS 
+- R
+
 ## Example Code in SAS
 ```
 ods trace on;
