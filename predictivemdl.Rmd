@@ -1,0 +1,98 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+list.of.packages <- c("caret","tidyverse","xgboost","e1071","randomForest","corrplot","car","ROSE","DMwR") #Specify the list of packages required for your project
+
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]  #Check for the packages that are NOT installed in the system
+
+if(length(new.packages)) install.packages(new.packages)   #Install the packages NOT installed in the system
+
+```
+
+
+```{r}
+library(caret)
+library(ROSE)
+library(tidyverse)
+library(DMwR)
+library(e1071)
+library(randomForest)
+```
+
+```{r}
+train <- read.csv("train.csv")
+head(train)
+```
+```{r}
+summary(train)
+```
+
+
+```{r}
+str(train)
+```
+
+```{r}
+cols <- c("install", "wifi","lang_en_us","lang_en_other","lang_other","landscape","iOS10","iOS9","iOS8","iOS7","retina_hd","iPhone","iPad")
+train[,cols] <- lapply(train[,cols],as.factor)
+
+```
+
+```{r}
+head(train)
+str(train)
+```
+
+Generate new dataset with ROSE
+
+```{r}
+train1 <- ROSE(install~.,data=train,p = 0.5,seed=45)$data
+table(train1$install)
+```
+
+```{r}
+summary(train1)
+```
+
+set all negative values to positive
+```{r}
+col = c("device_volume","resolution","publisher_install_rate","install_rate_sq")
+train1[col] = lapply(train1[col],abs)
+summary(train1)
+```
+
+
+
+Implement model 2 developed in sas and check AUC
+```{r}
+lgmdl <- glm(install~ resolution + publisher_install_rate+ lang_en_us+ landscape+ wifi+ install_rate_sq + resolution*publisher_install_rate+ publisher_install_rate*landscape + resolution*publisher_install_rate*landscape, data = train1,family="binomial") 
+
+summary(lgmdl)
+```
+
+
+```{r}
+test <- read.csv("test.csv")
+test[,cols] <- lapply(test[,cols],as.factor)
+
+predlg <- predict(lgmdl, newdata= test,type="response")
+roc.curve(test$install, predlg)
+```
+
+
+Utilizing only statistically significant features
+```{r}
+
+train2 <- select(train,c("install","wifi","resolution","landscape","publisher_install_rate","install_rate_sq","lang_en_us"))
+lgmdl_2 <- glm(install~ resolution + publisher_install_rate+ lang_en_us+ landscape+install_rate_sq + publisher_install_rate*landscape + resolution*landscape  , data = train2,family="binomial") 
+
+summary(lgmdl_2)
+
+predlg_2 <- predict(lgmdl_2, newdata= test)
+roc.curve(test$install, predlg_2)
+```
+
+
