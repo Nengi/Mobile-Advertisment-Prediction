@@ -27,3 +27,15 @@ proc logistic data = model_pred2 plots=roc(id=prob);
 
 ```
 
+## Example Code in R
+```
+lgmdl <- glm(install~ resolution + publisher_install_rate+ lang_en_us+ landscape+ wifi+ install_rate_sq + resolution*publisher_install_rate+ publisher_install_rate*landscape + resolution*publisher_install_rate*landscape, data = train1,family="binomial") 
+
+summary(lgmdl)
+
+test <- read.csv("test.csv")
+test[,cols] <- lapply(test[,cols],as.factor)
+
+predlg <- predict(lgmdl, newdata= test,type="response")
+roc.curve(test$install, predlg)
+```
